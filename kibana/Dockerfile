@@ -59,6 +59,8 @@ COPY --chown=1000:0 config/kibana.yml /usr/share/kibana/config/kibana.yml
 # variables and translate them to Kibana CLI options.
 COPY --chown=1000:0 bin/kibana-docker /usr/local/bin/
 
+RUN chmod a+x /usr/local/bin/kibana-docker
+
 # Ensure gid 0 write permissions for OpenShift.
 RUN chmod g+ws /usr/share/kibana && find /usr/share/kibana -gid 0 -and -not -perm /g+w -exec chmod g+w {} \;
 
