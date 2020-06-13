@@ -11,14 +11,15 @@
 # Set gid=0 and make group perms==owner perms
 ################################################################################
 
-FROM arm64v8/centos:7 AS builder
+FROM ubuntu:focal AS builder
 
 ENV PATH /usr/share/elasticsearch/bin:$PATH
 
-RUN groupadd -g 1000 elasticsearch &&     adduser -u 1000 -g 1000 -d /usr/share/elasticsearch elasticsearch
+RUN groupadd -g 1000 elasticsearch &&  useradd -m -u 1000 -g 1000 -d /usr/share/elasticsearch elasticsearch
 
 WORKDIR /usr/share/elasticsearch
 
+RUN apt update && apt install curl -y
 RUN cd /opt && curl --retry 8 -s -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.7.1-linux-aarch64.tar.gz && cd -
 
 RUN tar zxf /opt/elasticsearch-7.7.1-linux-aarch64.tar.gz --strip-components=1
@@ -33,13 +34,13 @@ COPY config/elasticsearch.yml config/log4j2.properties config/
 # Add entrypoint
 ################################################################################
 
-FROM arm64v8/centos:7
+FROM ubuntu:focal
 
 ENV ELASTIC_CONTAINER true
 
-RUN for iter in {1..10}; do yum update -y &&     yum install -y nc &&     yum clean all && exit_code=0 && break || exit_code=$? && echo "yum error: retry $iter in 10s" && sleep 10; done;     (exit $exit_code)
+RUN for iter in {1..10}; do apt update -y &&  apt install -y netcat &&   exit_code=0 && break || exit_code=$? && echo "yum error: retry $iter in 10s" && sleep 10; done;     (exit $exit_code)
 
-RUN groupadd -g 1000 elasticsearch &&     adduser -u 1000 -g 1000 -G 0 -d /usr/share/elasticsearch elasticsearch &&     chmod 0775 /usr/share/elasticsearch &&     chgrp 0 /usr/share/elasticsearch
+RUN groupadd -g 1000 elasticsearch &&  useradd -m -u 1000 -g 1000 -d /usr/share/elasticsearch elasticsearch &&     chmod 0775 /usr/share/elasticsearch &&     chgrp 0 /usr/share/elasticsearch
 
 WORKDIR /usr/share/elasticsearch
 COPY --from=builder --chown=1000:0 /usr/share/elasticsearch /usr/share/elasticsearch
