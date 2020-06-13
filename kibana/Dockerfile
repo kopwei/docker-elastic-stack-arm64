@@ -40,6 +40,8 @@ EXPOSE 5601
 
 # Add Reporting dependencies.
 RUN apt update && apt install -y dialog fontconfig freetype2-demos libreadline8 curl
+# Use bash as default shell
+RUN rm /usr/bin/sh && ln -s /usr/bin/bash /usr/bin/sh
 
 # Bring in Kibana from the initial stage.
 COPY --from=prep_files --chown=1000:0 /usr/share/kibana /usr/share/kibana

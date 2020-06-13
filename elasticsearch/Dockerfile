@@ -41,6 +41,7 @@ ENV ELASTIC_CONTAINER true
 RUN for iter in {1..10}; do apt update -y &&  apt install -y netcat curl &&   exit_code=0 && break || exit_code=$? && echo "yum error: retry $iter in 10s" && sleep 10; done;     (exit $exit_code)
 
 RUN groupadd -g 1000 elasticsearch &&  useradd -m -u 1000 -g 1000 -d /usr/share/elasticsearch elasticsearch &&     chmod 0775 /usr/share/elasticsearch &&     chgrp 0 /usr/share/elasticsearch
+RUN rm /usr/bin/sh && ln -s /usr/bin/bash /usr/bin/sh
 
 WORKDIR /usr/share/elasticsearch
 COPY --from=builder --chown=1000:0 /usr/share/elasticsearch /usr/share/elasticsearch
