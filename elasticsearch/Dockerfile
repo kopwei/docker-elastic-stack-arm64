@@ -61,7 +61,7 @@ ENV ELASTIC_CONTAINER true
 
 COPY --from=builder /tini /tini
 
-RUN for iter in {1..10}; do apt update && apt install -y netcat && \
+RUN for iter in {1..10}; do apt update && apt install -y netcat curl && \
     exit_code=0 && break || exit_code=$? && echo "apt error: retry $iter in 10s" && sleep 10; done; \
     (exit $exit_code)
 
