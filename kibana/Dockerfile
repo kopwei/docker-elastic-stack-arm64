@@ -14,7 +14,7 @@ RUN apt update && apt install -y build-essential curl
 RUN mkdir /usr/share/kibana
 WORKDIR /usr/share/kibana
 
-RUN curl -sL https://artifacts.elastic.co/downloads/kibana/kibana-7.7.1-linux-x86_64.tar.gz | tar --strip-components=1 -zxf -
+RUN curl -sL https://artifacts.elastic.co/downloads/kibana/kibana-7.8.0-linux-x86_64.tar.gz | tar --strip-components=1 -zxf -
 # replace amd64 node with arm64
 RUN rm -rf /usr/share/kibana/node/* && \
     curl -sL https://nodejs.org/dist/v10.19.0/node-v10.19.0-linux-arm64.tar.gz | tar -C /usr/share/kibana/node/ --strip-components=1 -xzf -
@@ -70,7 +70,7 @@ RUN chmod g+ws /usr/share/kibana && find /usr/share/kibana -gid 0 -and -not -per
 RUN groupadd --gid 1000 kibana && useradd -u 1000 -g 1000 -d /usr/share/kibana kibana
 USER kibana
 
-LABEL org.label-schema.schema-version="1.0" org.label-schema.vendor="Elastic" org.label-schema.name="kibana" org.label-schema.version="7.7.1-SNAPSHOT" org.label-schema.url="https://www.elastic.co/products/kibana" org.label-schema.vcs-url="https://github.com/elastic/kibana" org.label-schema.license="ASL 2.0" org.label-schema.usage="https://www.elastic.co/guide/en/kibana/index.html" org.label-schema.build-date="2020-04-11T05:35:13.592Z" license="ASL 2.0"
+LABEL org.label-schema.schema-version="1.0" org.label-schema.vendor="Elastic" org.label-schema.name="kibana" org.label-schema.version="7.8.0" org.label-schema.url="https://www.elastic.co/products/kibana" org.label-schema.vcs-url="https://github.com/elastic/kibana" org.label-schema.license="Elastic License" org.label-schema.usage="https://www.elastic.co/guide/en/kibana/index.html" org.label-schema.build-date="2020-06-14T20:39:23.401Z" license="Elastic License"
 
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
 
